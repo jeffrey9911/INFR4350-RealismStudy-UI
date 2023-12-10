@@ -1,0 +1,14 @@
+ID,Age,Gender,Video_game_exp,VR_exp,Background_design_tech,First_try,Tutorial_time,Task_time,Learning,Navigation,Intuitiveness,FClarity,Efficiency,Immersion,Comfort,Overall_preference
+100697262,23,Male,Advanced,Beginner,Some,Flat,108,83,2,3,2,2,2,1,2,3D
+100787442,21,Male,Advanced,Novice,Experienced,Flat,128,88,2,3,2,2,3,1,1,3D
+1,24,Female,Intermediate,Beginner,Experienced,Flat,141,90,3,3,3,3,3,2,3,3D
+100787343,21,Male,Advanced,Novice,Experienced,Flat,139,88,5,3,5,4,3,3,3,Flat
+100785936,21,Male,Casual,Novice,Some,Flat,149,98,4,4,4,4,4,4,4,Flat
+100658626,24,Male,Advanced,Novice,Experienced,Flat,135,79,4,4,4,5,4,4,4,Flat
+100706787,23,Male,Expert,Beginner,Experienced,Flat,104,79,4,5,4,5,5,4,5,Flat
+100780233,21,Male,Intermediate,Intermediate,Some,Flat,103,70,4,4,3,4,2,3,4,Flat
+2,22,Male,Advanced,Novice,None,Flat,129,80,3,2,3,3,2,1,3,3D
+3,25,Female,Beginner,Novice,None,Flat,152,108,2,2,1,3,2,1,3,3D
+100788603,22,Male,Advanced,Beginner,Some,Flat,135,89,4,4,4,4,4,4,4,3D
+4,24,Male,Intermediate,Novice,Some,Flat,148,96,4,2,4,3,2,2,3,3D
+100789575,23,Male,Intermediate,Novice,None,Flat,149,91,3,2,3,4,3,2,2,3D

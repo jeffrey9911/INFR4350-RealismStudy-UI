@@ -1,0 +1,209 @@
+---
+title: "Study-UI"
+output: html_document
+date: "2023-12-03"
+---
+
+Load CSV
+```{r}
+data <- read.csv("data.csv")
+```
+
+
+
+Preference Likert Scale
+```{r}
+library(reshape2)
+
+selected_columns <- data[c("Learning", "Navigation", "Intuitiveness", "FClarity", "Efficiency", "Immersion", "Comfort")]
+
+data_long <- melt(selected_columns)
+
+rating_labels <- c("Strongly Prefer 3D UI", "Prefer 3D UI", "Neutral", "Prefer Flat UI", "Strongly Prefer Flat UI")
+
+library(ggplot2)
+
+plot <- ggplot(data_long, aes(x = variable, fill = factor(value))) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(name = "Rating", 
+                    values = c("1" = "#e9505a", "2" = "#EBCCCE", "3" = "gray88", "4" = "#cfcfe8", "5" = "#7474b0"),
+                    labels = rating_labels) +
+  labs(x = "", y = "Percentage", title = "Likert Scale Ratings") +
+  theme_minimal()
+
+ggsave(filename = "visualized/preference_likert.png", plot = plot, width = 5, height = 2, dpi = 500)
+
+plot
+```
+
+```{r}
+
+
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+
+# Reordering factors as per the specified order
+data$Video_game_exp <- factor(data$Video_game_exp, levels = c('Beginner', 'Casual', 'Intermediate', 'Advanced', 'Expert'))
+data$VR_exp <- factor(data$VR_exp, levels = c('Novice', 'Beginner', 'Intermediate'))
+data$Background_design_tech <- factor(data$Background_design_tech, levels = c('None', 'Some', 'Experienced'))
+
+# Calculating mean tutorial and task times
+video_game_exp_stats <- data %>% group_by(Video_game_exp) %>% summarise(Avg_Tutorial_Time = mean(Tutorial_time), Avg_Task_Time = mean(Task_time))
+vr_exp_stats <- data %>% group_by(VR_exp) %>% summarise(Avg_Tutorial_Time = mean(Tutorial_time), Avg_Task_Time = mean(Task_time))
+background_exp_stats <- data %>% group_by(Background_design_tech) %>% summarise(Avg_Tutorial_Time = mean(Tutorial_time), Avg_Task_Time = mean(Task_time))
+
+
+# Plotting
+# Video Game Experience
+plot <- ggplot(video_game_exp_stats, aes(x=Video_game_exp, y=Avg_Tutorial_Time)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  ggtitle('Average Tutorial Time by Video Game Experience') +
+  xlab('Video Game Experience') +
+  ylab('Average Time (seconds)')
+ggsave(filename = "visualized/video_game_exp_vs_tut.png", plot = plot, width = 5, height = 2, dpi = 500)
+plot
+
+
+plot <- ggplot(video_game_exp_stats, aes(x=Video_game_exp, y=Avg_Task_Time)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  ggtitle('Average Task Time by Video Game Experience') +
+  xlab('Video Game Experience') +
+  ylab('Average Time (seconds)')
+ggsave(filename = "visualized/video_game_exp_vs_task.png", plot = plot, width = 5, height = 2, dpi = 500)
+plot
+
+# VR Experience
+plot <- ggplot(vr_exp_stats, aes(x=VR_exp, y=Avg_Tutorial_Time)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  ggtitle('Average Tutorial Time by VR Experience') +
+  xlab('VR Experience') +
+  ylab('Average Time (seconds)')
+ggsave(filename = "visualized/vr_exp_vs_tut.png", plot = plot, width = 5, height = 2, dpi = 500)
+plot
+
+plot <- ggplot(vr_exp_stats, aes(x=VR_exp, y=Avg_Task_Time)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  ggtitle('Average Task Time by VR Experience') +
+  xlab('VR Experience') +
+  ylab('Average Time (seconds)')
+ggsave(filename = "visualized/r_exp_vs_task.png", plot = plot, width = 5, height = 2, dpi = 500)
+plot
+
+# Background in Design/Tech
+plot <- ggplot(background_exp_stats, aes(x=Background_design_tech, y=Avg_Tutorial_Time)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  ggtitle('Average Tutorial Time by Background in Design/Tech') +
+  xlab('Background in Design/Tech') +
+  ylab('Average Time (seconds)')
+ggsave(filename = "visualized/background_vs_tut.png", plot = plot, width = 5, height = 2, dpi = 500)
+plot
+
+plot <- ggplot(background_exp_stats, aes(x=Background_design_tech, y=Avg_Task_Time)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  ggtitle('Average Task Time by Background in Design/Tech') +
+  xlab('Background in Design/Tech') +
+  ylab('Average Time (seconds)')
+ggsave(filename = "visualized/background_vs_task.png", plot = plot, width = 5, height = 2, dpi = 500)
+plot
+
+```
+
+Based on the preference Likert scale, number of people who think Flat UI is good is slightly greater than 3D UI.
+
+
+
+
+
+playthrough time boxplot
+```{r}
+library(reshape2)
+
+selected_columns <- data[c("Tutorial_time", "Task_time")]
+
+data_long <- melt(selected_columns)
+
+library("ggpubr")
+plot <- ggboxplot(data_long, x = "variable", y = "value",
+          color = "variable",
+          order = c("Tutorial_time", "Task_time"),
+          ylab = "Time to Complete", xlab = "Playthrough")
+
+ggsave(filename = "visualized/playthrough_time_boxplot.png", plot = plot, width = 5, height = 4, dpi = 500)
+
+plot
+```
+
+There are no significant outliers.
+
+
+
+
+
+
+```{r}
+library(ggplot2)
+
+overall_pref_count <- table(data$Overall_preference)
+
+# Converting the table to a dataframe for ggplot
+df_overall_pref <- as.data.frame(overall_pref_count)
+
+# Creating the pie chart
+plot <- ggplot(df_overall_pref, aes(x = "", y = Freq, fill = Var1)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y") +
+  labs(fill = "Overall Preference", 
+       title = "Distribution of Overall Preferences") +
+  theme_void()
+
+
+ggsave(filename = "visualized/overall_preference_distribution.png", plot = plot, width = 5, height = 4, dpi = 500)
+
+plot
+```
+
+Even though more people think Flat UI is better to interact with, but they still prefer 3D UI more than Flat UI.
+
+
+
+
+Below are the Kruskal-Wallis test. All no significant difference (P Value > 0.005), which means video game experience, VR experience, and background in design or tech does affect the overall performance.
+```{r}
+kruskal_result <- kruskal.test(Task_time ~ VR_exp, data = data)
+kruskal_result
+```
+
+
+```{r}
+kruskal_result <- kruskal.test(Task_time ~ Video_game_exp, data = data)
+kruskal_result
+```
+
+
+```{r}
+kruskal_result <- kruskal.test(Task_time ~ Background_design_tech, data = data)
+kruskal_result
+```
+
+
+```{r}
+kruskal_result <- kruskal.test(Tutorial_time ~ VR_exp, data = data)
+kruskal_result
+```
+
+
+```{r}
+kruskal_result <- kruskal.test(Tutorial_time ~ Video_game_exp, data = data)
+kruskal_result
+```
+
+
+```{r}
+kruskal_result <- kruskal.test(Tutorial_time ~ Background_design_tech, data = data)
+kruskal_result
+```
+
